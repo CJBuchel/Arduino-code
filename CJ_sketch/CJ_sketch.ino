@@ -1,17 +1,17 @@
 
 
-/*The tripple sensor board you have should work with this. However, the middle sesor would be obsolete.
+/*The tripple sensor board you have should work with this. However, the middle sesor would be obsolete.  
 
 /*------ Arduino Line Follower Code----- */
 /*-------definning Inputs------*/
-#define LS 2      // left sensor
-#define RS 3      // right sensor
+#define LS 1      // left sensor
+#define RS 13      // right sensor
 
 /*-------definning Outputs------*/
-#define LM1 4       // left motor // you can change the pin numbers to suit you best
-#define LM2 5       // left motor
-#define RM1 6       // right motor
-#define RM2 7       // right motor
+#define LM1 2       // left motor // you can change the pin numbers to suit you best
+#define LM2 4       // left motor
+#define RM1 7       // right motor
+#define RM2 8       // right motor
 
 void setup()
 {
