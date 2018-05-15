@@ -47,7 +47,7 @@ void loop()
   {
     motors.setM1Speed(speed);
     stopIfFault();
-    delay(10);
+    delay(0);
   }
 
   for (int speed = 400; speed >= 0; speed--)
@@ -61,18 +61,18 @@ void loop()
   
   digitalWrite(LED_PIN, LOW);
   
-  for (int speed = 0; speed >= -400; speed--)
+  for (int speed = 0; speed <= -400; speed--)
   {
     motors.setM1Speed(speed);
     stopIfFault();
     delay(0);
   }
   
-  for (int speed = -400; speed <= 0; speed++)
+  for (int speed = -400; speed >= 0; speed++)
   {
     motors.setM1Speed(speed);
     stopIfFault();
-    delay(10);
+    delay(0);
   }
 
   // run M2 motor with positive speed
@@ -97,14 +97,14 @@ void loop()
   
   digitalWrite(LED_PIN, LOW);
   
-  for (int speed = 0; speed >= -400; speed--)
+  for (int speed = 0; speed <= -400; speed--)
   {
     motors.setM2Speed(speed);
     stopIfFault();
-    delay(0);
+    delay(10);
   }
   
-  for (int speed = -400; speed <= 0; speed++)
+  for (int speed = -400; speed >= 0; speed++)
   {
     motors.setM2Speed(speed);
     stopIfFault();
