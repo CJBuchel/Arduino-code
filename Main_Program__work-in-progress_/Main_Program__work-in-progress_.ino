@@ -1,115 +1,100 @@
-#include <A4990MotorShield.h>
+/*The tripple sensor board you have should work with this. However, the middle sesor would be obsolete.  
 
-/*
- * This example uses the A4990MotorShield library to drive each motor with the
- * Pololu A4990 Dual Motor Driver Shield for Arduino forward, then backward. 
- * The yellow user LED is on when a motor is set to a positive speed and off when
- * a motor is set to a negative speed.
- */
+/*------ Arduino Line Follower Code----- */
+/*-------definning Inputs------*/
+#define LS 1      // left sensor
+#define RS 13      // right sensor
 
-#define LED_PIN 13
+/*-------definning Outputs------*/
+#define LM1 2       // left motor // you can change the pin numbers to suit you best
 
-A4990MotorShield motors;
+#define RM1 7       // right motor
 
-/* 
- * For safety, it is good practice to monitor motor driver faults and handle
- * them in an appropriate way. If a fault is detected, both motor speeds are set
- * to zero and it is reported on the serial port.
- */
-void stopIfFault()
-{
-  if (motors.getFault())
-  {
-    motors.setSpeeds(0,0);
-    Serial.println("Fault");
-    while(1);
-  }
-}
 
+#include "DualVNH5019MotorShield.h" //This includes a library in the code, that way we can use the motor shield
+ 
+// configure library with pins as remapped for single-channel operation
+// this lets the single motor be controlled as if it were "motor 1"
+DualVNH5019MotorShield md;
+ 
 void setup()
 {
-  pinMode(LED_PIN, OUTPUT);
-  Serial.begin(115200);
-  Serial.println("Pololu A4990 Dual Motor Driver Shield for Arduino");
+  md.init();
+  // remaining setup code goes here
+  pinMode(LS, INPUT); //<=====
+  pinMode(RS, INPUT);//<===^sensors
   
-  // uncomment one or both of the following lines if your motors' directions need to be flipped
-  //motors.flipM1(true);
-  //motors.flipM2(true);
+  pinMode(LM1, OUTPUT);  //these two define that we will be using the Lm1 variable and the Rm1 as outputs (motors). as shown above when we defined Lm1 and Rm1 as pins 2 and 7, however we are not using pins on the arduino board for the motors.
+  // so technically we don't need this code. But we can utilize it for something else in the future.
+  
+  pinMode(RM1, OUTPUT);
+  
 }
-
+ 
 void loop()
 {
-  // run M1 motor with positive speed
+  // loops endlessly; main loop goes here
+  // the following code is a simple example:
 
-  digitalWrite(LED_PIN, HIGH);
-  
-  for (int speed = 0; speed <= 400; speed++)
-  {
-    motors.setM1Speed(speed);
-    stopIfFault();
-    delay(0);
-  }
 
-  for (int speed = 400; speed >= 0; speed--)
+  
+
+
+ if(digitalRead(LS) && digitalRead(RS))     // Move Forward if no sensors see black
   {
-    motors.setM1Speed(speed);
-    stopIfFault();
-    delay(0);
-  }
-  
-  // run M1 motor with negative speed
-  
-  digitalWrite(LED_PIN, LOW);
-  
-  for (int speed = 0; speed <= -400; speed--)
-  {
-    motors.setM1Speed(speed);
-    stopIfFault();
-    delay(0);
-  }
-  
-  for (int speed = -400; speed >= 0; speed++)
-  {
-    motors.setM1Speed(speed);
-    stopIfFault();
-    delay(0);
+    
+     md.setM1Speed(400);  // single-channel motor (left) full-speed "forward"
+  delay(0);  
+
+     md.setM2Speed(400);  // single-channel motor (right) full-speed "forward"
+  delay(0);  
+    
+    
   }
 
-  // run M2 motor with positive speed
+
+
   
-  digitalWrite(LED_PIN, HIGH);
   
-  for (int speed = 0; speed <= 400; speed++)
+  if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right if the left sensor sees black
   {
-    motors.setM2Speed(speed);
-    stopIfFault();
-    delay(10);
+    
+     md.setM1Speed(0);  
+  delay(0);  
+    
+    
+     md.setM2Speed(400);  
+  delay(0);  
+    
   }
 
-  for (int speed = 400; speed >= 0; speed--)
+
+  
+  
+  if(digitalRead(LS) && !(digitalRead(RS)))     // turn left if right sensor sees black
   {
-    motors.setM2Speed(speed);
-    stopIfFault();
-    delay(0);
+    
+     md.setM1Speed(400); 
+  delay(0);  
+   
+    
+     md.setM2Speed(0); 
+  delay(0);  
+    
   }
+
+
   
-  // run M2 motor with negative speed
   
-  digitalWrite(LED_PIN, LOW);
-  
-  for (int speed = 0; speed <= -400; speed--)
+  if(!(digitalRead(LS)) && !(digitalRead(RS)))     // stop if both sensors see black <==== i put this in here as a safty sort of thing. if you want to stop the robot at the end of a line. just great a large black patch on the ground
   {
-    motors.setM2Speed(speed);
-    stopIfFault();
-    delay(10);
+    
+     md.setM1Speed(0);  
+  delay(0);  
+    
+    
+     md.setM1Speed(0);  
+  delay(0);  
+    
   }
-  
-  for (int speed = -400; speed >= 0; speed++)
-  {
-    motors.setM2Speed(speed);
-    stopIfFault();
-    delay(10);
-  }
-  
-  delay(0);
 }
