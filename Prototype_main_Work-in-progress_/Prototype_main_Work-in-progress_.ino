@@ -10,6 +10,8 @@
 
 #define RM1 7       // right motor
 
+#define RSL 5   // Robot signal light (RSL), if you choose to include it.  it's on pin 5, it can change to a different pin or no pin at all if you don't want a safty light
+
 
 #include "DualVNH5019MotorShield.h" //This includes a library in the code, that way we can use the motor shield
  
@@ -37,12 +39,13 @@ void loop()
   // the following code is a simple example:
 
 
-  
+    
 
 
  if(digitalRead(LS) && digitalRead(RS))     // Move Forward if no sensors see black
   {
-    
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+  delay(0);   
      md.setM1Speed(400);  // single-channel motor (left) full-speed "forward"
   delay(0);  
 
@@ -58,7 +61,8 @@ void loop()
   
   if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right if the left sensor sees black
   {
-    
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+  delay(0);   
      md.setM1Speed(0);  
   delay(0);  
     
@@ -73,7 +77,8 @@ void loop()
   
   if(digitalRead(LS) && !(digitalRead(RS)))     // turn left if right sensor sees black
   {
-    
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+  delay(0);   
      md.setM1Speed(400); 
   delay(0);  
    
@@ -95,9 +100,12 @@ void loop()
     
      md.setM1Speed(0);  
   delay(0);  
+
+
+  
     
   }
-}
 
+}
 
 
