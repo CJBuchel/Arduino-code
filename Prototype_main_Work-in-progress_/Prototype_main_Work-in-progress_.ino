@@ -11,7 +11,7 @@
 #define RM1 7       // right motor
 
 
-#include "DualVNH5019MotorShield.h"
+#include "DualVNH5019MotorShield.h" //This includes a library in the code, that way we can use the motor shield
  
 // configure library with pins as remapped for single-channel operation
 // this lets the single motor be controlled as if it were "motor 1"
@@ -21,10 +21,11 @@ void setup()
 {
   md.init();
   // remaining setup code goes here
-  pinMode(LS, INPUT);
-  pinMode(RS, INPUT);//<==sensors
+  pinMode(LS, INPUT); //<=====
+  pinMode(RS, INPUT);//<===^sensors
   
-  pinMode(LM1, OUTPUT);
+  pinMode(LM1, OUTPUT);  //these two define that we will be using the Lm1 variable and the Rm1 as outputs (motors). as shown above when we defined Lm1 and Rm1 as pins 2 and 7, however we are not using pins on the arduino board for the motors.
+  // so technically we don't need this code. But we can utilize it for something else in the future.
   
   pinMode(RM1, OUTPUT);
   
@@ -36,7 +37,10 @@ void loop()
   // the following code is a simple example:
 
 
- if(digitalRead(LS) && digitalRead(RS))     // Move Forward
+  
+
+
+ if(digitalRead(LS) && digitalRead(RS))     // Move Forward if no sensors see black
   {
     
      md.setM1Speed(400);  // single-channel motor (left) full-speed "forward"
@@ -47,8 +51,12 @@ void loop()
     
     
   }
+
+
+
   
-  if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right
+  
+  if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right if the left sensor sees black
   {
     
      md.setM1Speed(0);  
@@ -59,8 +67,11 @@ void loop()
   delay(0);  
     
   }
+
+
   
-  if(digitalRead(LS) && !(digitalRead(RS)))     // turn left
+  
+  if(digitalRead(LS) && !(digitalRead(RS)))     // turn left if right sensor sees black
   {
     
      md.setM1Speed(400); 
@@ -71,8 +82,11 @@ void loop()
   delay(0);  
     
   }
+
+
   
-  if(!(digitalRead(LS)) && !(digitalRead(RS)))     // stop
+  
+  if(!(digitalRead(LS)) && !(digitalRead(RS)))     // stop if both sensors see black <==== i put this in here as a safty sort of thing. if you want to stop the robot at the end of a line. just great a large black patch on the ground
   {
     
      md.setM1Speed(0);  
