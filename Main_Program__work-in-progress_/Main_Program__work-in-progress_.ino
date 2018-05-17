@@ -1,5 +1,3 @@
-/*The tripple sensor board you have should work with this. However, the middle sesor would be obsolete.  
-
 /*------ Arduino Line Follower Code----- */
 /*-------definning Inputs------*/
 #define LS 1      // left sensor
@@ -44,7 +42,7 @@ void loop()
 
  if(digitalRead(LS) && digitalRead(RS))     // Move Forward if no sensors see black
   {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
   delay(0);   
      md.setM1Speed(400);  // single-channel motor (left) full-speed "forward"
   delay(0);  
@@ -61,7 +59,7 @@ void loop()
   
   if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right if the left sensor sees black
   {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
   delay(0);   
      md.setM1Speed(0);  
   delay(0);  
@@ -77,7 +75,7 @@ void loop()
   
   if(digitalRead(LS) && !(digitalRead(RS)))     // turn left if right sensor sees black
   {
-    digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
+    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
   delay(0);   
      md.setM1Speed(400); 
   delay(0);  
