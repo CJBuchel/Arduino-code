@@ -1,107 +1,123 @@
-/*------ Arduino Line Follower Code----- */
-/*-------definning Inputs------*/
-#define LS 1      // left sensor
-#define RS 13      // right sensor
+#include <RedBot.h>
+RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on A5
+RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on A0
 
-/*-------definning Outputs------*/
-#define LM1 2       // left motor // you can change the pin numbers to suit you best
+// constants that are used in the code. LINETHRESHOLD is the level to detect 
+// if the sensor is on the line or not. If the sensor value is greater than this
+// the sensor is above a DARK line.
+//
+// SPEED sets the nominal speed
 
-#define RM1 7       // right motor
+#define LINETHRESHOLD 400
+#define SPEED 60  // sets the nominal speed. Set to any number from 0 - 255.
 
-#define RSL 5   // Robot signal light (RSL), if you choose to include it.  it's on pin 5, it can change to a different pin or no pin at all if you don't want a safty light
+RedBotMotors motors;
+int leftSpeed;   // variable used to store the leftMotor speed
+int rightSpeed;  // variable used to store the rightMotor speed
 
-
-#include "DualVNH5019MotorShield.h" //This includes a library in the code, that way we can use the motor shield
+#include "DualVNH5019MotorShield.h"
  
-// configure library with pins as remapped for single-channel operation
-// this lets the single motor be controlled as if it were "motor 1"
 DualVNH5019MotorShield md;
  
+
 void setup()
 {
+  Serial.begin(115200);
+  Serial.println("Dual VNH5019 Motor Shield");
   md.init();
-  // remaining setup code goes here
-  pinMode(LS, INPUT); //<=====
-  pinMode(RS, INPUT);//<===^sensors
   
-  pinMode(LM1, OUTPUT);  //these two define that we will be using the Lm1 variable and the Rm1 as outputs (motors). as shown above when we defined Lm1 and Rm1 as pins 2 and 7, however we are not using pins on the arduino board for the motors.
-  // so technically we don't need this code. But we can utilize it for something else in the future.
-  
-  pinMode(RM1, OUTPUT);
-  
+  Serial.begin(9600);
+  Serial.println("Welcome to experiment 6.2 - Line Following");
+  Serial.println("------------------------------------------");
+  delay(2000);
+  Serial.println("IR Sensor Readings: ");
+  delay(500);
+   
 }
- 
+
 void loop()
 {
-  // loops endlessly; main loop goes here
-  // the following code is a simple example:
+  
+  Serial.print(left.read());
+  Serial.print("\t");  // tab character
+  Serial.print("\t");  // tab character
+  Serial.print(right.read());
+  Serial.println();
 
-
-    
-
-
- if(digitalRead(LS) && digitalRead(RS))     // Move Forward if no sensors see black
+ if((left.read() < LINETHRESHOLD)&& (right.read() < LINETHRESHOLD) )
+ {
+   for (int i = -400; i <= 0; i++)
   {
-    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
-  delay(0);   
-     md.setM1Speed(400);  // single-channel motor (left) full-speed "forward"
-  delay(0);  
-
-     md.setM2Speed(400);  // single-channel motor (right) full-speed "forward"
-  delay(0);  
-    
-    
+    md.setM1Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M1 current: ");
+      Serial.println(md.getM1CurrentMilliamps());
+    }
+    delay(0);
+  }
+for (int i = -400; i <= 0; i++)
+  {
+    md.setM2Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M2 current: ");
+      Serial.println(md.getM2CurrentMilliamps());
+    }
+    delay(0);
+  }
   }
 
 
 
   
-  
-  if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right if the left sensor sees black
+  // if the line is under the right sensor, adjust relative speeds to turn to the right
+  if(right.read() > LINETHRESHOLD)
   {
-    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
-  delay(0);   
-     md.setM1Speed(0);  
-  delay(0);  
-    
-    
-     md.setM2Speed(400);  
-  delay(0);  
-    
-  }
-
-
-  
-  
-  if(digitalRead(LS) && !(digitalRead(RS)))     // turn left if right sensor sees black
+    for (int i = 0; i <= 400; i++)
   {
-    digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level, which is a max of 5 volts)
-  delay(0);   
-     md.setM1Speed(400); 
-  delay(0);  
+    md.setM2Speed(i);
    
-    
-     md.setM2Speed(0); 
-  delay(0);  
-    
+    if (i%200 == 100)
+    {
+      Serial.print("M2 current: ");
+      Serial.println(md.getM2CurrentMilliamps());
+    }
+    delay(0);
   }
 
+  
+  }
 
-  
-  
-  if(!(digitalRead(LS)) && !(digitalRead(RS)))     // stop if both sensors see black <==== i put this in here as a safty sort of thing. if you want to stop the robot at the end of a line. just great a large black patch on the ground
+  // if the line is under the left sensor, adjust relative speeds to turn to the left
+  if(left.read() > LINETHRESHOLD)
   {
-    
-     md.setM1Speed(0);  
-  delay(0);  
-    
-    
-     md.setM1Speed(0);  
-  delay(0);  
 
-
-  
-    
+    for (int i = 0; i <= 400; i++)
+  {
+    md.setM1Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M1 current: ");
+      Serial.println(md.getM1CurrentMilliamps());
+    }
+    delay(0);
   }
 
+  }
+    
+    
+  
+  
+  // if all sensors are on black or up in the air, stop the motors.
+  // otherwise, run motors given the control speeds above.
+  if((left.read() > LINETHRESHOLD)&& (right.read() > LINETHRESHOLD) )
+  {
+     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+  delay(1000);                       // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  delay(1000); 
+  }
 }
+
+  
