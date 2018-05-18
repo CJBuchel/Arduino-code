@@ -13,11 +13,11 @@
 #define RSL 5   // Robot signal light (RSL), if you choose to include it.  it's on pin 5, it can change to a different pin or no pin at all if you don't want a safty light
 
 
-#include "DualVNH5019MotorShield.h" //This includes a library in the code, that way we can use the motor shield
+#include "DualG2HighPowerMotorShield.h" //This includes a library in the code, that way we can use the motor shield
  
 // configure library with pins as remapped for single-channel operation
 // this lets the single motor be controlled as if it were "motor 1"
-DualVNH5019MotorShield md;
+DualG2HighPowerMotorShield24v14 md;
 
 void stopIfFault()
 {
