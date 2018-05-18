@@ -112,12 +112,9 @@ for (int i = -400; i <= 0; i++)
   // if all sensors are on black or up in the air, stop the motors.
   // otherwise, run motors given the control speeds above.
   if((left.read() > LINETHRESHOLD)&& (right.read() > LINETHRESHOLD) )
-  {
-     digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000); 
-  }
+  delay(0);
+  
+  
 }
 
   
