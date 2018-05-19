@@ -45,9 +45,10 @@ void loop()
   Serial.print(right.read());
   Serial.println();
 
- if((left.read() < LINETHRESHOLD)&& (right.read() < LINETHRESHOLD) )
- {
-   for (int i = -400; i <= 0; i++)
+
+if(center.read() > LINETHRESHOLD)
+	{
+ for (int i = -400; i <= 0; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -67,6 +68,10 @@ for (int i = -400; i <= 0; i++)
     }
     delay(0);
   }
+
+	}
+
+ 
   }
 
 
