@@ -1,6 +1,6 @@
 #include <RedBot.h>
 RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on pin A5. 
-RedbotSensor center = RedbotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
+RedBotSensor center = RedbotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
 RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on pin A0.
 
 // constants that are used in the code. LINETHRESHOLD is the level to detect 
@@ -115,10 +115,17 @@ for (int i = -400; i <= 0; i++)
     
   
   
-  // if all sensors are on black or up in the air, stop the motors.
-  // otherwise, run motors given the control speeds above.
-  if((left.read() > LINETHRESHOLD)&& (right.read() > LINETHRESHOLD) )
-  delay(0);
+  if((left.read() > LINETHRESHOLD) && (center.read() > LINETHRESHOLD) && (right.read() > LINETHRESHOLD) )
+	{
+		motors.stop();
+	}
+	else
+	{
+		motors.leftMotor(leftSpeed);
+		motors.rightMotor(rightSpeed);
+		
+	}
+	delay(0);  // add a delay to decrease sensitivity.
   
   
 }
