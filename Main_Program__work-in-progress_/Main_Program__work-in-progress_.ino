@@ -119,12 +119,7 @@ for (int i = -400; i <= 0; i++)
 	{
 		motors.stop();
 	}
-	else
-	{
-		motors.leftMotor(leftSpeed);
-		motors.rightMotor(rightSpeed);
-		
-	}
+	
 	delay(0);  // add a delay to decrease sensitivity.
   
   
