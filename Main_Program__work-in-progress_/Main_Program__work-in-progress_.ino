@@ -90,6 +90,7 @@ void setup()
    
 }
 
+<<<<<<< HEAD
 void loop()
 {
   
@@ -220,6 +221,8 @@ void setup()
   delay(500);
    
 }
+=======
+>>>>>>> master
 
 void loop()
 {
@@ -231,7 +234,7 @@ void loop()
   Serial.println();
 
 
->>>>>>> master
+
 if(center.read() > LINETHRESHOLD)
 	{
  for (int i = -400; i <= 0; i++)
@@ -254,13 +257,19 @@ for (int i = -400; i <= 0; i++)
     }
     delay(0);
   }
+}
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 >>>>>>> master
 	}
+=======
+
+	
+>>>>>>> master
 
  
-  }
+  
 
 
 
@@ -314,9 +323,12 @@ for (int i = -400; i <= 0; i++)
 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> master
   
 =======
 =======
+=======
+>>>>>>> master
 	}
 >>>>>>> master
