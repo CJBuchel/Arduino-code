@@ -1,6 +1,6 @@
 #include <RedBot.h>
 RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on pin A5. 
-RedbotSensor center = RedbotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
+RedBotSensor center = RedBotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
 RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on pin A0.
 
 // constants that are used in the code. LINETHRESHOLD is the level to detect 
@@ -72,7 +72,7 @@ for (int i = -400; i <= 0; i++)
 	}
 
  
-  }
+  
 
 
 
