@@ -1,6 +1,7 @@
 #include <RedBot.h>
-RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on A5
-RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on A0
+RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on pin A5. 
+RedbotSensor center = RedbotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
+RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on pin A0.
 
 // constants that are used in the code. LINETHRESHOLD is the level to detect 
 // if the sensor is on the line or not. If the sensor value is greater than this
@@ -8,7 +9,7 @@ RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on A
 //
 // SPEED sets the nominal speed
 
-#define LINETHRESHOLD 400
+#define LINETHRESHOLD 400 // Threshold is the line between what is sees as black or light. If it go's past this number it will be considered black.
 #define SPEED 60  // sets the nominal speed. Set to any number from 0 - 255.
 
 RedBotMotors motors;
