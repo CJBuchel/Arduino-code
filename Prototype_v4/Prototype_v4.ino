@@ -5,6 +5,7 @@
 DualVNH5019MotorShield md;
 #define LS 2      // left sensor
 #define RS 3      // right sensor
+#define RSL 13    // Robot Safety Light
 
 /*-------definning Outputs------*/
 #define LM1 4       // left motor
@@ -17,7 +18,7 @@ void setup()
   Serial.begin(115200);
   Serial.println("Dual VNH5019 Motor Shield");
   
-  Serial.println("Digital Sensor graphs -Proto-v4");
+  Serial.println("Digital Sensor graphs -Prototype-v4");
   md.init();
   
   Serial.begin(9600);
@@ -28,10 +29,12 @@ void setup()
   delay(500);
   pinMode(LS, INPUT);
   pinMode(RS, INPUT);
+  pinMode(RSL, OUTPUT);
 }
 
 void loop()
 {
+  /*-------------------------------------------------------------------------------*/
   if(digitalRead(LS) && digitalRead(RS))     // Move Forward
   {
     for (int i = 0; i <= 400; i++)
@@ -41,6 +44,7 @@ void loop()
     {
       Serial.print("M1 current: ");
       Serial.println(md.getM1CurrentMilliamps());
+      digitalWrite(RSL, HIGH);
     }
     delay(0);
   }
@@ -56,7 +60,7 @@ for (int i = 0; i <= 400; i++)
   }
 
   }
-  
+  /*----------------------------------------------------------------------*/
   if(!(digitalRead(LS)) && digitalRead(RS))     // Turn right
   {
 for (int i = 0; i <= 400; i++)
@@ -67,6 +71,7 @@ for (int i = 0; i <= 400; i++)
     {
       Serial.print("M2 current: ");
       Serial.println(md.getM2CurrentMilliamps());
+      digitalWrite(RSL, HIGH);
     }
     delay(0);
   }
@@ -81,7 +86,7 @@ for (int i = 0; i <= 400; i++)
     delay(0);
   }
   }
-  
+    /*----------------------------------------------------------------------*/
   if(digitalRead(LS) && !(digitalRead(RS)))     // turn left
   {
   for (int i = 0; i <= 400; i++)
@@ -91,6 +96,7 @@ for (int i = 0; i <= 400; i++)
     {
       Serial.print("M1 current: ");
       Serial.println(md.getM1CurrentMilliamps());
+      digitalWrite(RSL, HIGH);
     }
     delay(0);
   }
@@ -105,12 +111,12 @@ for (int i = 0; i <= 400; i++)
     delay(0);
   }
   }
-  
+    /*----------------------------------------------------------------------*/
   if(!(digitalRead(LS)) && !(digitalRead(RS)))     // stop
   {
- digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
+ digitalWrite(RSL, HIGH);   // turn the LED on (HIGH is the voltage level)
   delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
+  digitalWrite(RSL, LOW);    // turn the LED off by making the voltage LOW
   delay(1000); 
   }
 }
