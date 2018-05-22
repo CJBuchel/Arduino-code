@@ -1,17 +1,16 @@
-
 #include <RedBot.h>
-RedBotSensor left = RedBotSensor(A5);   // initialize a left sensor object on pin A5. 
-RedBotSensor center = RedBotSensor(A4); // initialize a center sesor object on pin A4. /* 'A' = Analog.
-RedBotSensor right = RedBotSensor(A0);  // initialize a right sensor object on pin A0.
+RedBotSensor left = RedBotSensor(A0);   // initialize a left sensor object on A3
+RedBotSensor center = RedBotSensor(A3);
+RedBotSensor right = RedBotSensor(A5);  // initialize a right sensor object on A7
 
 // constants that are used in the code. LINETHRESHOLD is the level to detect 
 // if the sensor is on the line or not. If the sensor value is greater than this
 // the sensor is above a DARK line.
 //
-// SPEED sets the nominal speed
-
-#define LINETHRESHOLD 400 // Threshold is the line between what is sees as black or light. If it go's past this number it will be considered black.
-#define SPEED 60  // sets the nominal speed. Set to any number from 0 - 255.
+// SPEED sets the nomina
+#define RSL 13    // Robot Safety Light
+#define LINETHRESHOLD 800
+#define SPEED 120  // sets the nominal speed. Set to any number from 0 - 255.
 
 RedBotMotors motors;
 int leftSpeed;   // variable used to store the leftMotor speed
@@ -24,12 +23,16 @@ DualVNH5019MotorShield md;
 
 void setup()
 {
+  pinMode(RSL, OUTPUT);
+  digitalWrite(RSL, HIGH);
+  Serial.begin(115200);
+  Serial.println("Dual VNH5019 Motor Shield");
   Serial.begin(115200);
   Serial.println("Dual VNH5019 Motor Shield");
   md.init();
   
   Serial.begin(9600);
-  Serial.println("Welcome to experiment 6.2 - Line Following");
+  Serial.println(" Tripple Reflective Sensors Online: Authored By Connor Buchel");
   Serial.println("------------------------------------------");
   delay(2000);
   Serial.println("IR Sensor Readings: ");
@@ -37,98 +40,105 @@ void setup()
    
 }
 
-
 void loop()
 {
-  
+
   Serial.print(left.read());
   Serial.print("\t");  // tab character
+  Serial.print(center.read());
   Serial.print("\t");  // tab character
   Serial.print(right.read());
   Serial.println();
 
-
-
-if(center.read() > LINETHRESHOLD)
-	{// if statement start
- for (int i = -400; i <= 0; i++)
-  {// motor start
+ if((left.read() > LINETHRESHOLD) && (center.read() < LINETHRESHOLD) && (right.read() > LINETHRESHOLD))
+ {
+    for (int i = 0; i <= 200; i++)
+  {
     md.setM1Speed(i);
     if (i%200 == 100)
-    {// if statement start
+    {
       Serial.print("M1 current: ");
       Serial.println(md.getM1CurrentMilliamps());
-    }// if statement end
+    }
     delay(0);
-  }// motor end
-for (int i = -400; i <= 0; i++)
-  {// notor start
+  }
+for (int i = 0; i <= 200; i++)
+  {
     md.setM2Speed(i);
     if (i%200 == 100)
-    {// if statement start
+    {
       Serial.print("M2 current: ");
       Serial.println(md.getM2CurrentMilliamps());
-    }// if statement end
+    }
     delay(0);
-  }// motor end
-
-
-	}// if statement end
-
- 
-  
+  }
+  }
 
 
 
   
   // if the line is under the right sensor, adjust relative speeds to turn to the right
-  if(right.read() > LINETHRESHOLD)
-  {//if statement start
-    for (int i = 0; i <= 400; i++)
-  {// motor 
+  else if(right.read() < LINETHRESHOLD)
+  {
+     for (int i = 0; i <= 200; i++)
+  {
+    md.setM1Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M1 current: ");
+      Serial.println(md.getM1CurrentMilliamps());
+    }
+    delay(0);
+  }
+  for (int i = -200; i <= 0; i++)
+  {
+    md.setM2Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M2 current: ");
+      Serial.println(md.getM2CurrentMilliamps());
+    }
+    delay(0);
+  }
+
+  
+  }
+
+  // if the line is under the left sensor, adjust relative speeds to turn to the left
+  else if(left.read() < LINETHRESHOLD)
+  {
+   for (int i = 0; i <= 200; i++)
+  {
     md.setM2Speed(i);
    
     if (i%200 == 100)
-    {// if statement start
+    {
       Serial.print("M2 current: ");
       Serial.println(md.getM2CurrentMilliamps());
-    }// if statement end
+    }
     delay(0);
-  }//motor end
-
-  
-  }//if statement end
-
-  // if the line is under the left sensor, adjust relative speeds to turn to the left
-  if(left.read() > LINETHRESHOLD)
-  {//if statement start
-
-    for (int i = 0; i <= 400; i++)
-  {//motor start
+  }
+   for (int i = -200; i <= 0; i++)
+  {
     md.setM1Speed(i);
     if (i%200 == 100)
-    {// if statement start
+    {
       Serial.print("M1 current: ");
       Serial.println(md.getM1CurrentMilliamps());
-    }// if statement end
+    }
     delay(0);
-  }// motor end
+  }
 
-  }// if statement end
+
+
+  }
     
     
   
   
   // if all sensors are on black or up in the air, stop the motors.
   // otherwise, run motors given the control speeds above.
-  if((left.read() > LINETHRESHOLD)&& (right.read() > LINETHRESHOLD) )
-  { // if statement start
-  delay(9000);
   
+}
+
   
-} // if statement end
-
-} //Void loop end
-
-
-
