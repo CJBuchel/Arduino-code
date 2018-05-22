@@ -2,16 +2,16 @@
 
 #include <RedBot.h>
 RedBotSensor left = RedBotSensor(A0);   // initialize a left sensor object on A3
-RedBotSensor center = RedBotSensor(A4); // initialize a center sensor object on A6
+RedBotSensor center = RedBotSensor(A3);
 RedBotSensor right = RedBotSensor(A5);  // initialize a right sensor object on A7
 
 // constants that are used in the code. LINETHRESHOLD is the level to detect 
 // if the sensor is on the line or not. If the sensor value is greater than this
 // the sensor is above a DARK line.
 //
-// SPEED sets the nominal speed
-
-#define LINETHRESHOLD 100
+// SPEED sets the nomina
+#define RSL 13    // Robot Safety Light
+#define LINETHRESHOLD 800
 #define SPEED 120  // sets the nominal speed. Set to any number from 0 - 255.
 
 RedBotMotors motors;
@@ -25,6 +25,10 @@ DualVNH5019MotorShield md;
 
 void setup()
 {
+  pinMode(RSL, OUTPUT);
+  digitalWrite(RSL, HIGH);
+  Serial.begin(115200);
+  Serial.println("Dual VNH5019 Motor Shield");
   Serial.begin(115200);
   Serial.println("Dual VNH5019 Motor Shield");
   md.init();
@@ -40,16 +44,17 @@ void setup()
 
 void loop()
 {
-  
+
 	Serial.print(left.read());
 	Serial.print("\t");  // tab character
+  Serial.print(center.read());
 	Serial.print("\t");  // tab character
 	Serial.print(right.read());
 	Serial.println();
 
- if(center.read() > LINETHRESHOLD)
+ if((left.read() > LINETHRESHOLD) && (center.read() < LINETHRESHOLD) && (right.read() > LINETHRESHOLD))
  {
-    for (int i = 0; i <= 400; i++)
+    for (int i = 0; i <= 200; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -59,7 +64,7 @@ void loop()
     }
     delay(0);
   }
-for (int i = 0; i <= 400; i++)
+for (int i = 0; i <= 200; i++)
   {
     md.setM2Speed(i);
     if (i%200 == 100)
@@ -75,9 +80,36 @@ for (int i = 0; i <= 400; i++)
 
 	
 	// if the line is under the right sensor, adjust relative speeds to turn to the right
-	else if(right.read() > LINETHRESHOLD)
+	else if(right.read() < LINETHRESHOLD)
 	{
-    for (int i = 0; i <= 400; i++)
+     for (int i = 0; i <= 200; i++)
+  {
+    md.setM1Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M1 current: ");
+      Serial.println(md.getM1CurrentMilliamps());
+    }
+    delay(0);
+  }
+  for (int i = -200; i <= 0; i++)
+  {
+    md.setM2Speed(i);
+    if (i%200 == 100)
+    {
+      Serial.print("M2 current: ");
+      Serial.println(md.getM2CurrentMilliamps());
+    }
+    delay(0);
+  }
+
+  
+	}
+
+	// if the line is under the left sensor, adjust relative speeds to turn to the left
+	else if(left.read() < LINETHRESHOLD)
+	{
+   for (int i = 0; i <= 200; i++)
   {
     md.setM2Speed(i);
    
@@ -88,7 +120,7 @@ for (int i = 0; i <= 400; i++)
     }
     delay(0);
   }
-   for (int i = -400; i <= 0; i++)
+   for (int i = -200; i <= 0; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -99,33 +131,7 @@ for (int i = 0; i <= 400; i++)
     delay(0);
   }
 
-  
-	}
 
-	// if the line is under the left sensor, adjust relative speeds to turn to the left
-	else if(left.read() > LINETHRESHOLD)
-	{
-
-    for (int i = 0; i <= 400; i++)
-  {
-    md.setM1Speed(i);
-    if (i%200 == 100)
-    {
-      Serial.print("M1 current: ");
-      Serial.println(md.getM1CurrentMilliamps());
-    }
-    delay(0);
-  }
-  for (int i = -400; i <= 0; i++)
-  {
-    md.setM2Speed(i);
-    if (i%200 == 100)
-    {
-      Serial.print("M2 current: ");
-      Serial.println(md.getM2CurrentMilliamps());
-    }
-    delay(0);
-  }
 
   }
     
@@ -134,13 +140,7 @@ for (int i = 0; i <= 400; i++)
 	
 	// if all sensors are on black or up in the air, stop the motors.
 	// otherwise, run motors given the control speeds above.
-	if((left.read() > LINETHRESHOLD) && (center.read() > LINETHRESHOLD) && (right.read() > LINETHRESHOLD) )
-	{
-		 digitalWrite(LED_BUILTIN, HIGH);   // turn the LED on (HIGH is the voltage level)
-  delay(1000);                       // wait for a second
-  digitalWrite(LED_BUILTIN, LOW);    // turn the LED off by making the voltage LOW
-  delay(1000); 
-	}
+	
 }
 
 	
