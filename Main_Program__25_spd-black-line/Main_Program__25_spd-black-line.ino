@@ -52,7 +52,7 @@ void loop()
 
  if((left.read() > LINETHRESHOLD) && (center.read() < LINETHRESHOLD) && (right.read() > LINETHRESHOLD))
  {
-    for (int i = 0; i <= 200; i++)
+    for (int i = 0; i <= 100; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -62,7 +62,7 @@ void loop()
     }
     delay(0);
   }
-for (int i = 0; i <= 200; i++)
+for (int i = 0; i <= 100; i++)
   {
     md.setM2Speed(i);
     if (i%200 == 100)
@@ -80,7 +80,7 @@ for (int i = 0; i <= 200; i++)
   // if the line is under the right sensor, adjust relative speeds to turn to the right
   else if(right.read() < LINETHRESHOLD)
   {
-     for (int i = 0; i <= 200; i++)
+     for (int i = 0; i <= 100; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -90,7 +90,7 @@ for (int i = 0; i <= 200; i++)
     }
     delay(0);
   }
-  for (int i = -200; i <= 0; i++)
+  for (int i = -100; i <= 0; i++)
   {
     md.setM2Speed(i);
     if (i%200 == 100)
@@ -107,7 +107,7 @@ for (int i = 0; i <= 200; i++)
   // if the line is under the left sensor, adjust relative speeds to turn to the left
   else if(left.read() < LINETHRESHOLD)
   {
-   for (int i = 0; i <= 200; i++)
+   for (int i = 0; i <= 100; i++)
   {
     md.setM2Speed(i);
    
@@ -118,7 +118,7 @@ for (int i = 0; i <= 200; i++)
     }
     delay(0);
   }
-   for (int i = -200; i <= 0; i++)
+   for (int i = -100; i <= 0; i++)
   {
     md.setM1Speed(i);
     if (i%200 == 100)
@@ -140,5 +140,3 @@ for (int i = 0; i <= 200; i++)
   // otherwise, run motors given the control speeds above.
   
 }
-
-  
